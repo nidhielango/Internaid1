@@ -1,6 +1,7 @@
 
 import { Flex } from '@chakra-ui/react';
 import React from 'react';
+import Content from './Content/content';
 import Search from './Search';
 
 const Navbar:React.FC = () => {
@@ -12,6 +13,7 @@ const Navbar:React.FC = () => {
 
            </Flex>
         <Search/>
+        <Content />
         </Flex>
     )
 }
