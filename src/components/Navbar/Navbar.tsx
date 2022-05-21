@@ -1,6 +1,7 @@
 
 import { Flex } from '@chakra-ui/react';
 import React from 'react';
+import Search from './Search';
 
 const Navbar:React.FC = () => {
     //  <Image src="/images/logo.png" height="40px"/> Logo
@@ -10,6 +11,7 @@ const Navbar:React.FC = () => {
            <Flex align="center">
 
            </Flex>
+        <Search/>
         </Flex>
     )
 }
