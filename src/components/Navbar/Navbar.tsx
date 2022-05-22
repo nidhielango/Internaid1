@@ -1,7 +1,7 @@
 
 import { Flex } from '@chakra-ui/react';
 import React from 'react';
-import Content from './Content/content';
+import Content from './Content/Content';
 import Search from './Search';
 
 const Navbar:React.FC = () => {
