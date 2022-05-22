@@ -1,7 +1,8 @@
-import { Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from '@chakra-ui/react';
+import { Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Flex } from '@chakra-ui/react';
 import React from 'react';
 import { authModalState } from '../../../atoms/authModalAtom';
 import { useRecoilState } from 'recoil';
+import AuthInputs from './AuthInputs';
 
 const AuthModal:React.FC = () => {
   const [modalState, setModalState] = useRecoilState(authModalState);
@@ -18,10 +19,18 @@ const AuthModal:React.FC = () => {
       <Modal isOpen={modalState.open} onClose={handleClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>
+            {modalState.view === "login" && "Login"}
+            {modalState.view === "signup" && "Sign Up"}
+            {modalState.view === "resetPassword" && "Reset Password"}
+          </ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
-            MODAL BODY
+          <ModalBody display="flex" flexDirection="column" alignItems="center" justifyContent="center">
+
+            <Flex direction="column" align="center" justify="center" width="70%" border="1px solid blue">
+               <AuthInputs />
+            </Flex>
+         
           </ModalBody>
         </ModalContent>
       </Modal>
