@@ -19,15 +19,15 @@ const AuthModal:React.FC = () => {
       <Modal isOpen={modalState.open} onClose={handleClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>
+          <ModalHeader textAlign="center">
             {modalState.view === "login" && "Login"}
             {modalState.view === "signup" && "Sign Up"}
             {modalState.view === "resetPassword" && "Reset Password"}
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody display="flex" flexDirection="column" alignItems="center" justifyContent="center">
+          <ModalBody display="flex" flexDirection="column" alignItems="center" justifyContent="center" pb={5}>
 
-            <Flex direction="column" align="center" justify="center" width="70%" border="1px solid blue">
+            <Flex direction="column" align="center" justify="center" width="70%">
                <AuthInputs />
             </Flex>
          
