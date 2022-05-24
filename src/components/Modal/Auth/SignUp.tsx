@@ -60,11 +60,11 @@ const SignUp:React.FC = () => {
             name="confirmPassword" placeholder="confirmPassword" type="password" mb={2} fontSize="10pt" 
             _placeholder={{color: "gray.500"}} _hover={{bg:"white", border: "1px solid", borderColor: "blue.500",}} bg="gray.60"
             onChange={onChange}/>
-           
-           <Text textAlign="center" fontSize="10pt" color="red">
+           {(error || userError) &&
+           (<Text textAlign="center" fontSize="10pt" color="red">
                {error || FIREBASE_ERRORS[userError.message as keyof typeof FIREBASE_ERRORS]}
             </Text>
-            
+            )}
             <Button width="100%" height="36px" mt={2} mb={2} type="submit" isLoading={loading}>
                 SIGN UP
             </Button>
