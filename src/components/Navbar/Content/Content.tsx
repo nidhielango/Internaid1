@@ -5,7 +5,7 @@ import { auth } from '../../../firebase/clientApp';
 import AuthModal from '../../Modal/Auth/AuthModal';
 import AuthButtons from './AuthButtons';
 import Icons from './Icons';
-import NavMenu from "./NavMenu";
+import  UserMenu from "./UserMenu";
 
 type ContentProps = {
     user?: User| null; 
@@ -18,7 +18,7 @@ const Content:React.FC<ContentProps> = ({user}) => {
         <AuthModal />
         <Flex justify="center" align="center">
            {user ? <Icons/> : <AuthButtons/>}
-           <NavMenu user={user}/>
+           < UserMenu user={user}/>
         </Flex>
         </>
         

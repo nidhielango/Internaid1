@@ -1,5 +1,5 @@
 import { ChevronDownIcon } from '@chakra-ui/icons';
-import { Menu, Button, MenuButton, MenuItem, MenuList, Icon, Flex, MenuDivider } from '@chakra-ui/react';
+import { Text, Menu, Button, MenuButton, MenuItem, MenuList, Icon, Flex, MenuDivider, Box } from '@chakra-ui/react';
 import { signOut, User } from 'firebase/auth';
 import React from 'react';
 import { FaEdit } from "react-icons/fa";
@@ -15,7 +15,7 @@ type MenuProps = {
     user?: User| null; 
 };
 
-const NavMenu:React.FC<MenuProps> = ({user}) => {
+const  UserMenu:React.FC<MenuProps> = ({user}) => {
     const setAuthModalState = useSetRecoilState(authModalState);
     return (
         <Menu>
@@ -28,6 +28,21 @@ const NavMenu:React.FC<MenuProps> = ({user}) => {
                 {user? (
                 <>
                 <Icon fontSize={24} mr={1} color="gray.300" as={FaEdit}/>
+                <Flex
+                  display={{ base: "none", lg: "flex" }}
+                  direction="column"
+                  fontSize="8pt"
+                  alignItems="flex-start"
+                  mr={8}
+                >
+                  <Text fontWeight={700}>
+                    {user?.displayName || user?.email?.split("@")[0]}
+                  </Text>
+                  <Flex alignItems="center">
+                    <Icon as={IoSparkles} color="brand.100" mr={1} />
+                    <Text color="gray.400">score</Text>
+                  </Flex>
+                </Flex>
                 </>
                  ) :
                 (<Icon fontSize={24} mr={1} color="gray.400" as={VscAccount} />)
@@ -69,4 +84,4 @@ const NavMenu:React.FC<MenuProps> = ({user}) => {
         </Menu>
     )
 }
-export default NavMenu;
+export default UserMenu;
