@@ -1,6 +1,7 @@
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { Text, Menu, MenuButton, MenuList, Flex, Icon} from '@chakra-ui/react';
 import { TiHome } from "react-icons/ti";
+import Companies from './Companies';
 
 const  UserMenu:React.FC = () => {
     return (
@@ -20,7 +21,7 @@ const  UserMenu:React.FC = () => {
                 </Flex>
             </MenuButton>
             <MenuList>
-                Companies
+                <Companies/>
             </MenuList>
         </Menu>
     )
