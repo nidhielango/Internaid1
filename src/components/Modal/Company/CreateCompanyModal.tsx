@@ -1,7 +1,10 @@
 import { Box, Text, Button, Checkbox, Divider, Flex,Icon, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack } from '@chakra-ui/react';
+import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import React, { useState } from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { BsFillPersonFill, BsFillEyeFill } from 'react-icons/bs';
 import { HiLockClosed } from "react-icons/hi";
+import { auth, firestore } from '../../../firebase/clientApp';
 
 type CreateCompanyModalProps = {
     open: boolean;
@@ -12,6 +15,9 @@ const CreateCompanyModal:React.FC<CreateCompanyModalProps> = ({open, handleClose
     const [companyName, setCompanyName] = useState("");
     const [charsRemaining, setCharsRemaining] = useState(30);
     const [companyType, setCompanyType] = useState("public");
+    const [error, setError] = useState("");
+    const [user] = useAuthState(auth);
+    const [loading,setLoading] = useState(false);
 
     const onCompanyTypeChange = (
         event: React.ChangeEvent<HTMLInputElement>
@@ -28,12 +34,53 @@ const CreateCompanyModal:React.FC<CreateCompanyModalProps> = ({open, handleClose
         if (event.target.value.length > 30) return;
         setCompanyName(event.target.value);
         setCharsRemaining(30 - event.target.value.length);
-      };
+    };
 
+    const handleCreateCommunity = async () => {
+      // validate the company name
+    const format = /[ `!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/;
+
+    if (format.test(companyName) || companyName.length < 3) {
+      setError(
+        "Company names must be between 3–30 characters, and can only contain letters, numbers, or underscores."
+      );
+      return;
+    }
+
+    setLoading(true);
+    
+    try {
+      // create the company document in firestore if name is not taken and is valid 
+
+     const companyDocumentReference = doc(firestore, "companies", companyName); 
+     const companyDocument = await getDoc(companyDocumentReference);
+     
+     if (companyDocument.exists()) {
+       throw new Error(`${companyName} already exists`);
+     }
+
+     // create company
+     await setDoc(companyDocumentReference, {
+       creatorId: user?.uid,
+       createdAt: serverTimestamp(),
+       numberOfFollowers: 1,
+       privacyType: companyType,
+     }) ;
+
+    } catch (error: any) {
+      console.log("handleCreateCompany error", error);
+      setError(error.message);
+      
+    }
+
+    setLoading(false);
+
+     
+    };
 
     return (
        <>
-        <ModalWrapper isOpen={open} onClose={handleClose} size="lg">
+        <Modal isOpen={open} onClose={handleClose} size="lg">
             <ModalContent>
                 <ModalHeader
                     display="flex"
@@ -64,7 +111,9 @@ const CreateCompanyModal:React.FC<CreateCompanyModalProps> = ({open, handleClose
           >
             {charsRemaining} Characters remaining
           </Text>
-       
+          <Text fontSize="10pt" color="red" pt={1}>
+            {error}
+          </Text>
           <Box mt={4} mb={4}>
             <Text fontWeight={600} fontSize={15}>
               Company Type
@@ -120,7 +169,10 @@ const CreateCompanyModal:React.FC<CreateCompanyModalProps> = ({open, handleClose
                 </Flex>
               </Checkbox>
             </Stack>
+            </Box>
+            </ModalBody>
           </Box>
+       
                 
           <ModalFooter bg="gray.100" borderRadius="0px 0px 10px 10px">
         <Button variant="outline" height="30px" mr={2} onClick={handleClose}>
@@ -129,7 +181,8 @@ const CreateCompanyModal:React.FC<CreateCompanyModalProps> = ({open, handleClose
         <Button
           variant="solid"
           height="30px"
-          onClick={}
+          onClick={handleCreateCommunity}
+          isLoading={loading}
         >
           Create Company
         </Button>
