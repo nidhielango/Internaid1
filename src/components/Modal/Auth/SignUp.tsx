@@ -1,10 +1,11 @@
-import { Input, Button, Flex , Text} from '@chakra-ui/react';
+import { Input, Button, Flex , Text, useSafeLayoutEffect} from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { authModalState } from '../../../atoms/authModalAtom';
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
-import {auth} from "../../../firebase/clientApp";
+import {auth, firestore} from "../../../firebase/clientApp";
 import {FIREBASE_ERRORS} from "../../../firebase/errors";
+import { addDoc, collection } from 'firebase/firestore';
 
 
 const SignUp:React.FC = () => {
@@ -45,6 +46,17 @@ const SignUp:React.FC = () => {
             [event.target.name]: event.target.value,  
         }))
     }; 
+
+    const createUserDocument = async (user:User) => {
+        await addDoc(collection(firestore, "users"), user);
+    };
+
+    useEffect(()=> {
+        if (userCred){
+            createUserDocument(userCred.JSON.parse(JSON.stringify(user)));
+        }
+    }, [userCred]);
+   
 
     return (
         <form onSubmit={onSubmit}>
