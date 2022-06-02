@@ -1,5 +1,5 @@
 import { Box, Text, Button, Checkbox, Divider, Flex,Icon, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack } from '@chakra-ui/react';
-import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { doc, getDoc, runTransaction, serverTimestamp, setDoc } from 'firebase/firestore';
 import React, { useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { BsFillPersonFill, BsFillEyeFill } from 'react-icons/bs';
@@ -53,19 +53,32 @@ const CreateCompanyModal:React.FC<CreateCompanyModalProps> = ({open, handleClose
       // create the company document in firestore if name is not taken and is valid 
 
      const companyDocumentReference = doc(firestore, "companies", companyName); 
-     const companyDocument = await getDoc(companyDocumentReference);
-     
-     if (companyDocument.exists()) {
-       throw new Error(`${companyName} already exists`);
-     }
+    
+     // firebase transactions
+     await runTransaction(firestore, async (transaction) => {
+      // check if company exists
+      const companyDocument = await transaction.get(companyDocumentReference);
+      if (companyDocument.exists()) {
+        throw new Error(`${companyName} already exists`);
+      } 
 
-     // create company
-     await setDoc(companyDocumentReference, {
-       creatorId: user?.uid,
-       createdAt: serverTimestamp(),
-       numberOfFollowers: 1,
-       privacyType: companyType,
-     }) ;
+        // create company
+        transaction.set(companyDocumentReference, {
+          creatorId: user?.uid,
+          createdAt: serverTimestamp(),
+          numberOfFollowers: 1,
+          privacyType: companyType,
+        }) ;
+
+        // create companySnippet on user
+        transaction.set(doc(firestore,`users/${user?.uid}/companySnippets`, companyName), 
+        { companyId: companyName,
+          isModerator: true,
+        })
+     })
+
+     
+   
 
     } catch (error: any) {
       console.log("handleCreateCompany error", error);

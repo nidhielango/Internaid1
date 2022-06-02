@@ -11,5 +11,6 @@ export const createUserDocument = functions.auth.user().onCreate(async (user) =>
         displayName: user.displayName,
         providerDate: user.providerData,
     }
+    
     db.collection("users").doc(user.uid).set(newUser);
 });
