@@ -36,7 +36,7 @@ const CreateCompanyModal:React.FC<CreateCompanyModalProps> = ({open, handleClose
         setCharsRemaining(30 - event.target.value.length);
     };
 
-    const handleCreateCommunity = async () => {
+    const handleCreateCompany= async () => {
       // validate the company name
     const format = /[ `!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/;
 
@@ -53,6 +53,8 @@ const CreateCompanyModal:React.FC<CreateCompanyModalProps> = ({open, handleClose
       // create the company document in firestore if name is not taken and is valid 
 
      const companyDocumentReference = doc(firestore, "companies", companyName); 
+
+     
     
      // firebase transactions
      await runTransaction(firestore, async (transaction) => {
@@ -194,7 +196,7 @@ const CreateCompanyModal:React.FC<CreateCompanyModalProps> = ({open, handleClose
         <Button
           variant="solid"
           height="30px"
-          onClick={handleCreateCommunity}
+          onClick={handleCreateCompany}
           isLoading={loading}
         >
           Create Company

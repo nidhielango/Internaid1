@@ -6,6 +6,9 @@ type submitProps = {
 
 const submit:React.FC<submitProps> = () => {
     
-    return <div>Have a good coding</div>
+    return (
+        <>
+        </>
+    );
 }
 export default submit;

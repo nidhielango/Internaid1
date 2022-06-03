@@ -5,6 +5,8 @@ import { Company } from '../../atoms/companiesAtom';
 import { firestore } from '../../firebase/clientApp';
 import safeJsonStringify from 'safe-json-stringify';
 import CommunityNotFound from '../../components/Company/CompanyNotFound';
+import Header from '../../components/Company/Header';
+import PageContent from '../../components/Layout/PageContent';
 
 type CompanyProps = {
     companyData: Company;
@@ -14,7 +16,20 @@ const CompanyPage:React.FC<CompanyProps> = ({companyData}) => {
     
     if (!companyData) {
         return <CommunityNotFound/>
-    } return <div>{companyData.id} </div>
+    } 
+    return (
+        <>
+            <Header companyData={companyData}/>
+            <PageContent>
+                <>
+                    <div></div>
+                </>
+                <>
+                    <div></div>
+                </>
+            </PageContent>
+        </>
+    )
 
 }
 
