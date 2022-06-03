@@ -2,6 +2,7 @@ import { Box, Button, Flex, Icon, Image, Text } from '@chakra-ui/react';
 import React from 'react';
 import { GrAdd } from 'react-icons/gr';
 import { Company } from '../../atoms/companiesAtom';
+import useCompanyData from "../../hooks/useCompanyData";
 
 type HeaderProps = {
     companyData: Company;
@@ -10,7 +11,8 @@ type HeaderProps = {
 const Header:React.FC<HeaderProps> = ({companyData}) => {
     
     // read from company snippets
-    const isJoined = false; 
+    const {companyStateValue, onJoinOrLeaveCommunity} = useCompanyData();
+    const isJoined = !!companyStateValue.mySnippets.find(item => item.companyId === companyData.id) // !! -> boolean value 
     return (
         <Flex direction="column" width="100%" height="146px">
             <Box height="50%" bg="blue.400"/>
@@ -29,7 +31,7 @@ const Header:React.FC<HeaderProps> = ({companyData}) => {
                  height="30px"
                  pr={6}
                  pl={6}
-                 onClick={() => {}}
+                 onClick={() => onJoinOrLeaveCommunity(companyData,isJoined)}
                 
                 >{isJoined ? "Joined":"Join"}</Button>
                 </Flex>
