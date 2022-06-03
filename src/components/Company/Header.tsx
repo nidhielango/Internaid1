@@ -11,7 +11,7 @@ type HeaderProps = {
 const Header:React.FC<HeaderProps> = ({companyData}) => {
     
     // read from company snippets
-    const {companyStateValue, onJoinOrLeaveCommunity} = useCompanyData();
+    const {companyStateValue, onJoinOrLeaveCompany, loading} = useCompanyData();
     const isJoined = !!companyStateValue.mySnippets.find(item => item.companyId === companyData.id) // !! -> boolean value 
     return (
         <Flex direction="column" width="100%" height="146px">
@@ -31,8 +31,8 @@ const Header:React.FC<HeaderProps> = ({companyData}) => {
                  height="30px"
                  pr={6}
                  pl={6}
-                 onClick={() => onJoinOrLeaveCommunity(companyData,isJoined)}
-                
+                 onClick={() => onJoinOrLeaveCompany(companyData,isJoined)}
+                 isLoading={loading}
                 >{isJoined ? "Joined":"Join"}</Button>
                 </Flex>
                 </Flex>
