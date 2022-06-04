@@ -1,7 +1,8 @@
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, doc, getDocs, increment, writeBatch } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import {useRecoilState} from "recoil";
+import {useRecoilState, useSetRecoilState} from "recoil";
+import { authModalState } from '../atoms/authModalAtom';
 import {Company, CompanySnippet, companyState} from "../atoms/companiesAtom";
 import { auth, firestore } from '../firebase/clientApp';
 
@@ -11,14 +12,87 @@ const useCompanyData= () => {
     const [error, setError] = useState("");
     const [companyStateValue, setCompanyStateValue] = useRecoilState(companyState);
     const onJoinOrLeaveCompany = (companyData: Company, isJoined: boolean) => {
-        if (isJoined) {
-            leaveCompany(companyData.id);
-            return;
-        }
-        joinCompany(companyData);
+        const setAuthModalState = useSetRecoilState(authModalState);
+
+    if (!user) {
+        // open modal
+        setAuthModalState({open:true, view: "login"});
+        return;
     }
-    const joinCompany = (companyData:Company) => {};
-    const leaveCompany = (companyId:string) => {};
+
+    if (isJoined) {
+        leaveCompany(companyData.id);
+        return;
+    }
+    joinCompany(companyData);
+}
+    
+    
+    const joinCompany = async (companyData:Company) => {
+        // batch write 
+        try {
+
+            const batch = writeBatch(firestore);
+
+            // creating a new company snippet
+            const newSnippet: CompanySnippet = {
+                companyId: companyData.id,
+                imageURL: companyData.imageURL || "",
+            }
+            batch.set(doc(firestore, `users/${user?.uid}/companySnippets`, companyData.id), 
+            newSnippet);
+            
+            // updating the number of members (+1)
+            batch.update(doc(firestore, "companies", companyData.id), {
+                numberOfMembers: increment(1),
+            })
+
+            await batch.commit();
+
+             // updating recoil state 
+            setCompanyStateValue(prev => ({
+                ...prev,
+                mySnippets: [...prev.mySnippets, newSnippet],
+            }))
+
+
+        } catch (error: any){
+            console.log('joinCompany error', error);
+            setError(error.message);
+        }
+        setLoading(false);
+
+    };
+
+    const leaveCompany = async (companyId:string) => {
+        // batch write 
+
+        try {
+            const batch = writeBatch(firestore);
+
+            // deleting the company snippet from user
+            batch.delete(doc(firestore, `users/${user?.uid}/companySnippets`, companyId))
+            
+            // updating the number of members (-1)
+            batch.update(doc(firestore, "companies", companyId), {
+                numberOfMembers: increment(-1),
+            })
+
+            await batch.commit();
+
+            // update recoil state
+            setCompanyStateValue(prev => ({
+                ...prev,
+                mySnippets: prev.mySnippets.filter(item => item.companyId !== companyId)
+            }))
+
+        } catch (error: any) {
+            console.log("leaveCompany error", error.message)
+            setError(error.message);
+        }
+        setLoading(false);
+
+    };
 
     const getMySnippets = async() => {
         setLoading(true);
@@ -33,12 +107,12 @@ const useCompanyData= () => {
             }))
             
             console.log("snippets", snippets);
-        } catch(error) {
+        } catch(error:any) {
             console.log("getMySnippets error", error);
+            setError(error.message)
         }
         setLoading(false);
     }
-
     
 
     useEffect(()=> {
