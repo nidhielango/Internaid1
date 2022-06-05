@@ -1,14 +1,12 @@
 import React from 'react';
 
-type submitProps = {
-    
-};
 
-const submit:React.FC<submitProps> = () => {
+const SubmitPage:React.FC= () => {
     
     return (
-        <>
-        </>
+        <div>
+        Submit Page
+        </div>
     );
 }
-export default submit;
+export default SubmitPage;
