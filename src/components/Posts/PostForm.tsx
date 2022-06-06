@@ -1,4 +1,4 @@
-import { Alert, AlertDescription, AlertIcon, AlertTitle, CloseButton, Flex, Icon } from '@chakra-ui/react';
+import { Alert, AlertIcon, AlertTitle, Flex, Icon } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { IoDocumentText, IoImageOutline } from 'react-icons/io5';
 import { BiPoll} from 'react-icons/bi';

@@ -8,6 +8,7 @@ import CommunityNotFound from '../../components/Company/CompanyNotFound';
 import Header from '../../components/Company/Header';
 import PageContent from '../../components/Layout/PageContent';
 import CreatePost from '../../components/Company/CreatePost';
+import Posts from '../../components/Posts/Posts';
 
 type CompanyProps = {
     companyData: Company;
@@ -24,6 +25,7 @@ const CompanyPage:React.FC<CompanyProps> = ({companyData}) => {
             <PageContent>
                 <>
                     <CreatePost />
+                    <Posts companyData={companyData}/>
                 </>
                 <>
                  
