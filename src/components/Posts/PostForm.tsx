@@ -78,13 +78,15 @@ const PostForm:React.FC<PostFormProps> = ({user}) => {
           });
           console.log("HERE IS DOWNLOAD URL", downloadURL);
         }
+        // redirect user to main page
+        router.back();
 
       } catch (error: any) {
         setError(true);
         console.log("handleCreatePost error", error); 
       }
       setLoading(false);
-      router.back();
+      
     };
 
     const onSelectImage = (event: React.ChangeEvent<HTMLInputElement>) => {
