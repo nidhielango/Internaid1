@@ -1,4 +1,4 @@
-import { Flex, Icon,Skeleton,Spinner,Stack,Text, Image } from '@chakra-ui/react';
+import { Flex, Icon,Skeleton,Spinner,Stack,Text, Image, Alert, AlertIcon } from '@chakra-ui/react';
 import React, { useState } from "react";
 import moment from "moment";
 import {GiNotebook} from "react-icons/gi";
@@ -7,11 +7,12 @@ import { BsDot, BsChat } from 'react-icons/bs';
 import { IoArrowUpCircleSharp, IoArrowUpCircleOutline, IoArrowDownCircleOutline, IoArrowDownCircleSharp, IoArrowRedoOutline, IoBookmarkOutline } from 'react-icons/io5';
 import { Post } from '../../atoms/postsAtom';
 import Link from "next/link";
+import router from 'next/router';
 
 type PostItemProps = {
     post: Post;
     onVote: () => void;
-    onDeletePost: () => void;
+    onDeletePost: (post:Post) => Promise<boolean>;
     userIsCreator: boolean;
     onSelectPost?: () => void;
     userVoteValue?: number;
@@ -20,8 +21,30 @@ type PostItemProps = {
 const PostItem:React.FC<PostItemProps> = ({post, userIsCreator, userVoteValue, onVote, onSelectPost, onDeletePost }) => {
     
     const singlePostView = !onSelectPost; 
+    const [error, setError] = useState(false);
     const [loadingImage, setLoadingImage] = useState(true);
     const [loadingDelete, setLoadingDelete] = useState(false);
+    
+    const handleDelete = async (
+        event: React.MouseEvent<HTMLDivElement, MouseEvent>
+      ) => {
+        event.stopPropagation();
+        setLoadingDelete(true);
+        try {
+          const success = await onDeletePost(post);
+          if (!success) {
+              throw new Error("Failed to delete post");
+          }
+          console.log("Post successfully deleted");
+          if (router){ 
+              router.back();
+            }
+        } catch (error: any) {
+          setError(error.message);
+        }
+        setLoadingDelete(false);
+    };
+    
 
     return (
         <Flex 
@@ -57,6 +80,12 @@ const PostItem:React.FC<PostItemProps> = ({post, userIsCreator, userVoteValue, o
                     />
             </Flex>
             <Flex direction="column" width="100%">
+                {error && (
+                    <Alert status="error">
+                        <AlertIcon />
+                        <Text mr={2}>{error}</Text>
+                    </Alert>
+                )}
                 <Stack spacing={1} p="10px 10px">
                 {post.createdAt && (
                     <Stack direction="row" spacing={0.6} align="center" fontSize="9pt">
@@ -143,7 +172,7 @@ const PostItem:React.FC<PostItemProps> = ({post, userIsCreator, userVoteValue, o
                     borderRadius={4}
                     _hover={{ bg: "gray.200" }}
                     cursor="pointer"
-                    onClick={onDeletePost}
+                    onClick={handleDelete}
                     >
                     {loadingDelete ? (
                         <Spinner size="sm" />
