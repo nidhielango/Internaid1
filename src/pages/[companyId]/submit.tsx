@@ -1,6 +1,8 @@
 import { Box, Text } from '@chakra-ui/react';
 import React from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { useRecoilState } from 'recoil';
+import { companyState } from '../../atoms/companiesAtom';
 import PageContent from '../../components/Layout/PageContent';
 import PostForm from '../../components/Posts/PostForm';
 import { auth } from '../../firebase/clientApp';
@@ -8,6 +10,7 @@ import { auth } from '../../firebase/clientApp';
 
 const SubmitPage:React.FC= () => {
     const [user] = useAuthState(auth);
+    const companyStateValue = useRecoilState(companyState);
     return (
         <PageContent>
             <>

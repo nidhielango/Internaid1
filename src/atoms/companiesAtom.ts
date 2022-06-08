@@ -26,10 +26,10 @@ export interface CompanySnippet {
       | undefined;
     mySnippets: CompanySnippet[];
     initSnippetsFetched: boolean;
-    visitedCommunities: {
+    visitedCompanies: {
       [key: string]: Company;
     };
-    currentCommunity: Company;
+    currentCompany: Company;
   }
   
   export const defaultCompany: Company = {
@@ -42,8 +42,8 @@ export interface CompanySnippet {
   export const defaultCompanyState: CompanyState = {
     mySnippets: [],
     initSnippetsFetched: false,
-    visitedCommunities: {},
-    currentCommunity: defaultCompany,
+    visitedCompanies: {},
+    currentCompany: defaultCompany,
   };
   
   export const companyState = atom<CompanyState>({

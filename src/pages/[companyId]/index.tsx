@@ -1,7 +1,7 @@
 import { doc, getDoc } from 'firebase/firestore';
 import { GetServerSidePropsContext } from 'next';
-import React from 'react';
-import { Company } from '../../atoms/companiesAtom';
+import React, { useEffect } from 'react';
+import { Company, companyState } from '../../atoms/companiesAtom';
 import { firestore } from '../../firebase/clientApp';
 import safeJsonStringify from 'safe-json-stringify';
 import CommunityNotFound from '../../components/Company/CompanyNotFound';
@@ -9,6 +9,8 @@ import Header from '../../components/Company/Header';
 import PageContent from '../../components/Layout/PageContent';
 import CreatePost from '../../components/Company/CreatePost';
 import Posts from '../../components/Posts/Posts';
+import { useSetRecoilState } from 'recoil';
+import About from '../../components/Company/About';
 
 type CompanyProps = {
     companyData: Company;
@@ -16,9 +18,19 @@ type CompanyProps = {
 
 const CompanyPage:React.FC<CompanyProps> = ({companyData}) => {
     
+    const setCompanyStateValue = useSetRecoilState(companyState);
+
     if (!companyData) {
         return <CommunityNotFound/>
     } 
+
+    useEffect(()=>{
+        setCompanyStateValue((prev)=> ({
+            ...prev,
+            currentCompany: companyData,
+        }));
+    },[]);
+
     return (
         <>
             <Header companyData={companyData}/>
@@ -28,7 +40,7 @@ const CompanyPage:React.FC<CompanyProps> = ({companyData}) => {
                     <Posts companyData={companyData}/>
                 </>
                 <>
-                 
+                    <About companyData={companyData}/>
                 </>
             </PageContent>
         </>
