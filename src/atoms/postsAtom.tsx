@@ -16,7 +16,7 @@ export type Post = {
     voteValue: number;
   };
   imageURL?: string;
-  postIdx?: number;
+  postId?: number;
   createdAt: Timestamp;
   editedAt?: Timestamp;
 };

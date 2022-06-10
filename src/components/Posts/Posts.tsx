@@ -20,8 +20,8 @@ const Posts:React.FC<PostsProps> = ({companyData}) => {
 
 
     const getPosts = async() => {
+        setLoading(true);
         try {
-            setLoading(true);
             const postsQuery = query(
             collection(firestore, "posts"),
             where("companyId", "==", companyData?.id!),
@@ -45,8 +45,19 @@ const Posts:React.FC<PostsProps> = ({companyData}) => {
     };
 
     useEffect(() => {
-        getPosts();
-    }, []);
+        if (
+            postStateValue.postsCache[companyData?.id!] &&
+            !postStateValue.postUpdateRequired
+          ) {
+            setPostStateValue((prev) => ({
+              ...prev,
+              posts: postStateValue.postsCache[companyData?.id!],
+            }));
+            return;
+          }
+      
+          getPosts();
+        }, [companyData, postStateValue.postUpdateRequired]);
     
     return (
         <>
@@ -57,7 +68,9 @@ const Posts:React.FC<PostsProps> = ({companyData}) => {
             key={item.id}
             post={item}
             userIsCreator={user?.uid === item.creatorId}
-            userVoteValue={undefined}
+            userVoteValue={postStateValue.postVotes.find(
+                (vote) => vote.postId === item.id
+            ) ?.voteValue}
             onVote={onVote}
             onSelectPost={onSelectPost}
             onDeletePost={onDeletePost}/>

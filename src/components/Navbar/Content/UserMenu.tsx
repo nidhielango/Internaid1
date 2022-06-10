@@ -18,12 +18,10 @@ type MenuProps = {
 
 const  UserMenu:React.FC<MenuProps> = ({user}) => {
 
-    const resetCompanyState = useResetRecoilState(companyState);
     const setAuthModalState = useSetRecoilState(authModalState);
     
     const logout = async() => {
         await signOut(auth);
-        resetCompanyState();
     }
     
     return (

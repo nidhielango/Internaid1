@@ -1,4 +1,5 @@
-import { collection, doc, getDocs, increment, writeBatch } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, increment, writeBatch } from 'firebase/firestore';
+import router, { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import {useRecoilState, useSetRecoilState} from "recoil";
@@ -8,11 +9,12 @@ import { auth, firestore } from '../firebase/clientApp';
 
 const useCompanyData= () => {
     const [user] = useAuthState(auth);
+    const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [companyStateValue, setCompanyStateValue] = useRecoilState(companyState);
     const onJoinOrLeaveCompany = (companyData: Company, isJoined: boolean) => {
-        const setAuthModalState = useSetRecoilState(authModalState);
+    const setAuthModalState = useSetRecoilState(authModalState);
 
     if (!user) {
         // open modal
@@ -63,6 +65,7 @@ const useCompanyData= () => {
         setLoading(false);
 
     };
+    
 
     const leaveCompany = async (companyId:string) => {
         // batch write 
@@ -116,14 +119,23 @@ const useCompanyData= () => {
     
 
     useEffect(()=> {
-        if (!user) return;
+        if (!user){
+            setCompanyStateValue((prev) => ({
+                ...prev,
+                mySnippets: [],
+            }))
+            return;
+        };
         getMySnippets();
     }, [user]);
 
+   
     return {
         companyStateValue,
         onJoinOrLeaveCompany,
         loading,
+        setLoading,
+        error,
     };
 }
 export default useCompanyData;
