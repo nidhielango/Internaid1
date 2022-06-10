@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react';
 
 type PageContentProps = {
     maxWidth?:string;
-    children: ReactNode;
+    children: React.ReactNode;
 };
 
 const PageContent:React.FC<PageContentProps> = ({maxWidth, children}) => {

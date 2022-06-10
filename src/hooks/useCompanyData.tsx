@@ -16,6 +16,29 @@ const useCompanyData= () => {
     const onJoinOrLeaveCompany = (companyData: Company, isJoined: boolean) => {
     const setAuthModalState = useSetRecoilState(authModalState);
 
+    const getCompanyData = async (companyId:string) => {
+        try {
+            const companyDocReference = doc(firestore, 'companies', companyId as string);
+            const companyDoc = await getDoc(companyDocReference);
+
+            setCompanyStateValue((prev) => ({
+                ...prev,
+                currentCompany:{id:companyDoc.id, ...companyDoc.data()} as Company,
+            }));
+        } catch (error:any) {
+            console.log('getCompanyData error', error);
+        };
+    }
+
+    useEffect(()=> {
+        const {companyId} = router.query;
+
+        if (companyId && !companyStateValue.currentCompany){
+            getCompanyData(companyId as string);
+        }
+
+    }, [router.query, companyStateValue.currentCompany]);
+
     if (!user) {
         // open modal
         setAuthModalState({open:true, view: "login"});

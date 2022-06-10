@@ -3,14 +3,18 @@ import React from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRecoilState } from 'recoil';
 import { companyState } from '../../atoms/companiesAtom';
+import About from '../../components/Company/About';
 import PageContent from '../../components/Layout/PageContent';
 import PostForm from '../../components/Posts/PostForm';
 import { auth } from '../../firebase/clientApp';
+import useCompanyData from '../../hooks/useCompanyData';
 
 
 const SubmitPage:React.FC= () => {
     const [user] = useAuthState(auth);
-    const companyStateValue = useRecoilState(companyState);
+    
+    const {companyStateValue} = useCompanyData();
+
     return (
         <PageContent>
             <>
@@ -19,7 +23,11 @@ const SubmitPage:React.FC= () => {
             </Box>
             {user && <PostForm user={user}/>}
             </>
-            <>{}</>
+            <>
+            {companyStateValue.currentCompany && (
+                <About companyData={companyStateValue.currentCompany} />
+            )}
+            </>
         </PageContent>
     );
 }

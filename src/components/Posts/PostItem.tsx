@@ -11,10 +11,10 @@ import router from 'next/router';
 
 type PostItemProps = {
     post: Post;
-    onVote: (post:Post, vote:number, communityId:string) => void;
+    onVote: (event: React.MouseEvent<SVGElement, MouseEvent>, post:Post, vote:number, communityId:string) => void;
     onDeletePost: (post:Post) => Promise<boolean>;
     userIsCreator: boolean;
-    onSelectPost: () => void;
+    onSelectPost?: (post:Post) => void;
     userVoteValue?: number;
 };
 
@@ -36,8 +36,8 @@ const PostItem:React.FC<PostItemProps> = ({post, userIsCreator, userVoteValue, o
               throw new Error("Failed to delete post");
           }
           console.log("Post successfully deleted");
-          if (router){ 
-              router.back();
+          if (singlePostView){ 
+              router.push(`/${post.companyId}`);
             }
         } catch (error: any) {
           setError(error.message);
@@ -54,7 +54,7 @@ const PostItem:React.FC<PostItemProps> = ({post, userIsCreator, userVoteValue, o
         borderRadius={singlePostView ? "4px 4px 0px 0px" : 4}
          cursor={singlePostView ? "unset" : "pointer"}
          _hover={{ borderColor: singlePostView ? "none" : "gray.500" }}
-         onClick={() => {}}
+         onClick={() =>( onSelectPost && onSelectPost(post))}
         >
             <Flex
                 direction="column"
@@ -67,7 +67,7 @@ const PostItem:React.FC<PostItemProps> = ({post, userIsCreator, userVoteValue, o
                         color={userVoteValue === 1 ? "brand.100" : "gray.400"}
                         fontSize={22}
                         cursor="pointer"
-                        onClick={() => onVote(post, 1, post.companyId)}
+                        onClick={(event) => onVote(event, post, 1, post.companyId)}
                     />
                     <Text fontSize="9pt" fontWeight={600}>
                     {post.voteStatus}
@@ -76,7 +76,7 @@ const PostItem:React.FC<PostItemProps> = ({post, userIsCreator, userVoteValue, o
                     color={userVoteValue === -1 ? "#4379FF" : "gray.400"}
                     fontSize={22}
                     cursor="pointer"
-                    onClick={() => onVote(post, -1, post.companyId)}
+                    onClick={(event) => onVote(event, post, -1, post.companyId)}
                     />
             </Flex>
             <Flex direction="column" width="100%">

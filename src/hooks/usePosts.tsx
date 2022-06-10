@@ -1,5 +1,6 @@
 import { doc, deleteDoc, writeBatch, collection, getDocs, query, where } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
@@ -13,9 +14,10 @@ const usePosts = () => {
     const [postStateValue, setPostStateValue]= useRecoilState(postState);
     const currentCompany = useRecoilValue(companyState).currentCompany;
     const setAuthModalState = useSetRecoilState(authModalState);
+    const router = useRouter();
     
-    const onVote = async(post: Post, vote:number, companyId: string)=> {
-
+    const onVote = async(event: React.MouseEvent<SVGElement, MouseEvent>, post: Post, vote:number, companyId: string)=> {
+        event.stopPropagation();
         // check for user: if user does not exist -> open auth modal
         if (!user?.uid) {
             setAuthModalState({ open: true, view: "login" });
@@ -93,6 +95,13 @@ const usePosts = () => {
                 posts: updatedPosts,
                 postVotes: updatedPostVotes,
             }));
+
+            if (postStateValue.selectedPost){
+              setPostStateValue(prev => ({
+                ...prev,
+                selectedPost: updatedPost,
+              }))
+            }
              
 
             const postReference = doc(firestore, "posts", post.id!);
@@ -106,7 +115,14 @@ const usePosts = () => {
         }
     }
 
-    const onSelectPost = () => {};
+    const onSelectPost = (post:Post) => {
+        setPostStateValue((prev) => ({
+            ...prev,
+            selectedPost: post,
+        }));
+
+        router.push(`/${post.companyId}/comments/${post.id}`);
+    };
 
     const onDeletePost = async(post: Post):Promise<boolean> => {
         console.log("DELETING POST: ", post.id);

@@ -49,7 +49,7 @@ const PostForm:React.FC<PostFormProps> = ({user}) => {
     const {selectedFile, setSelectedFile, onSelectFile} = useFile();
 
     const handleCreatePost = async() => {
-      const {companyId } = router.query;
+      const {companyId} = router.query;
 
       // create new post
       const newPost:Post = {
@@ -62,7 +62,6 @@ const PostForm:React.FC<PostFormProps> = ({user}) => {
         voteStatus: 0,
         createdAt: serverTimestamp() as Timestamp,
         editedAt: serverTimestamp() as Timestamp,
-        id: ''
       };
 
       setLoading(true);
