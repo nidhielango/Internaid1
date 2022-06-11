@@ -5,7 +5,7 @@ import Companies from './Companies';
 
 const  UserMenu:React.FC = () => {
     return (
-        <Menu>
+        <Menu isOpen={false} >
             <MenuButton cursor="pointer"
                 padding="0px 6px"
                 borderRadius="4px"

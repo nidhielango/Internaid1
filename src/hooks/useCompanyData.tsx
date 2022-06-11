@@ -63,6 +63,7 @@ const useCompanyData= () => {
             const newSnippet: CompanySnippet = {
                 companyId: companyData.id,
                 imageURL: companyData.imageURL || "",
+                isModerator: user?.uid === companyData.creatorId,
             }
             batch.set(doc(firestore, `users/${user?.uid}/companySnippets`, companyData.id), 
             newSnippet);

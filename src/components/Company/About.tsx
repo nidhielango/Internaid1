@@ -91,7 +91,7 @@ const About:React.FC<AboutProps> = ({companyData}) => {
                                 <Flex align="center" justify="space-between">
                                     <Text color="blue.500" cursor="pointer" _hover={{textDecoration: "underline"}} onClick={()=> selectedFileReference.current?.click()}>Change Image</Text>
                                 {companyData.imageURL || selectedFile ? (
-                                    <Image src={selectedFile || companyData.imageURL} borderRadius="full" boxSize="40px" alt="Company Image"/>
+                                     <Image src={selectedFile || companyData.imageURL} borderRadius="full" boxSize="40px" alt="Company Image"/>
                                 ): (
                                     <Icon as={MdBusinessCenter} fontSize={30} color="brand.100" mr={2}/>
                                 )}
