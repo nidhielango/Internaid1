@@ -21,7 +21,7 @@ const SubmitPage:React.FC= () => {
             <Box p="14px 0px" borderBottom="1px solid" borderColor="white">
                 <Text>CREATE A POST</Text>
             </Box>
-            {user && <PostForm user={user}/>}
+            {user && <PostForm user={user} companyImageURL = {companyStateValue.currentCompany?.imageURL}/>}
             </>
             <>
             {companyStateValue.currentCompany && (

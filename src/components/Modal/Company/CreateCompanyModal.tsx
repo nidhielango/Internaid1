@@ -1,10 +1,12 @@
 import { Box, Text, Button, Checkbox, Divider, Flex,Icon, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack } from '@chakra-ui/react';
 import { doc, getDoc, runTransaction, serverTimestamp, setDoc } from 'firebase/firestore';
+import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { BsFillPersonFill, BsFillEyeFill } from 'react-icons/bs';
 import { HiLockClosed } from "react-icons/hi";
 import { auth, firestore } from '../../../firebase/clientApp';
+import useDirectory from '../../../hooks/useDirectory';
 
 type CreateCompanyModalProps = {
     open: boolean;
@@ -17,6 +19,8 @@ const CreateCompanyModal:React.FC<CreateCompanyModalProps> = ({open, handleClose
     const [companyType, setCompanyType] = useState("public");
     const [error, setError] = useState("");
     const [user] = useAuthState(auth);
+    const router = useRouter();
+    const { toggleMenuOpen } = useDirectory();
     const [loading,setLoading] = useState(false);
 
     const onCompanyTypeChange = (
@@ -78,9 +82,10 @@ const CreateCompanyModal:React.FC<CreateCompanyModalProps> = ({open, handleClose
           isModerator: true,
         })
      })
-
-     
-   
+    
+    handleClose();
+    toggleMenuOpen();
+    router.push(`/${companyName}`);
 
     } catch (error: any) {
       console.log("handleCreateCompany error", error);

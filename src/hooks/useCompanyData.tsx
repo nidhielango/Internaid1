@@ -131,6 +131,7 @@ const useCompanyData= () => {
             setCompanyStateValue(prev => ({
                 ...prev,
                 mySnippets: snippets as CompanySnippet[],
+                initSnippetsFetched: true,
             }))
             
             console.log("snippets", snippets);
@@ -147,6 +148,7 @@ const useCompanyData= () => {
             setCompanyStateValue((prev) => ({
                 ...prev,
                 mySnippets: [],
+                initSnippetsFetched: false,
             }))
             return;
         };

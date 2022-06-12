@@ -16,9 +16,10 @@ type PostItemProps = {
     userIsCreator: boolean;
     onSelectPost?: (post:Post) => void;
     userVoteValue?: number;
+    homePage?: boolean;
 };
 
-const PostItem:React.FC<PostItemProps> = ({post, userIsCreator, userVoteValue, onVote, onSelectPost, onDeletePost }) => {
+const PostItem:React.FC<PostItemProps> = ({post, userIsCreator, userVoteValue, onVote, onSelectPost, onDeletePost, homePage }) => {
     
     const singlePostView = !onSelectPost; 
     const [error, setError] = useState(false);
@@ -109,6 +110,22 @@ const PostItem:React.FC<PostItemProps> = ({post, userIsCreator, userVoteValue, o
                         </Link>
                         <Icon as={BsDot} color="gray.500" fontSize={8} />
                         </>
+                    {homePage && (
+                        <>
+                           {post.companyImageURL ? (
+                               <Image src={post.companyImageURL} borderRadius="full" boxSize="10px" mr={2}/>
+                           ) : (
+                                <Icon as={GiNotebook} fontSize="10pt" mr={1} color="blue.500" />
+                           )}
+                           <Link href={`/${post.companyId}`}>
+                               <Text fontWeight={700} _hover={{textDecoration: "underline" }} 
+                               onClick={(event) => event.stopPropagation()}>
+                                   {`/${post.companyId}`}
+                               </Text>
+                           </Link>
+                           <Icon as={BsDot}  color="gray.500" fontSize={8} />
+                        </>
+                    )}
                     <Text color="gray.500">
                         Posted by u/{post.userDisplayText}{" "}
                         {moment(new Date(post.createdAt.seconds * 1000)).fromNow()}

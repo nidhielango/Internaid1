@@ -15,6 +15,7 @@ import useFile from '../../hooks/useFile';
 
 type PostFormProps = { 
   user: User;
+  companyImageURL?: string;
 };
 
 const Tabs: TabItem[]= [
@@ -37,7 +38,7 @@ export type TabItem = {
     icon: typeof Icon.arguments;
   };
 
-const PostForm:React.FC<PostFormProps> = ({user}) => {
+const PostForm:React.FC<PostFormProps> = ({user, companyImageURL}) => {
     const router = useRouter();
     const [selectedTab, setSelectedTab] = useState(Tabs[0].title);
     const [textInputs, setTextInputs] = useState({
@@ -53,6 +54,7 @@ const PostForm:React.FC<PostFormProps> = ({user}) => {
 
       // create new post
       const newPost:Post = {
+        companyImageURL: companyImageURL || "",
         companyId: companyId as string,
         creatorId: user?.uid,
         userDisplayText: user.email!.split("@")[0],
