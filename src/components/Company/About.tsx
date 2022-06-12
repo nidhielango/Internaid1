@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Flex, Icon, Link, Stack, Image, Text, textDecoration, Spinner } from '@chakra-ui/react';
+import { Box, Button, Divider, Flex, Icon, Link, Stack, Image, Text, Spinner } from '@chakra-ui/react';
 import React, { useRef, useState } from 'react';
 import { Company, companyState } from '../../atoms/companiesAtom';
 import {HiOutlineDotsHorizontal} from "react-icons/hi";
@@ -11,7 +11,7 @@ import { GiNotebook } from 'react-icons/gi';
 import useFile from '../../hooks/useFile';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import { doc, updateDoc } from 'firebase/firestore';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { MdBusinessCenter } from 'react-icons/md';
 
 type AboutProps = {
@@ -22,7 +22,7 @@ const About:React.FC<AboutProps> = ({companyData}) => {
     const router = useRouter();
     const [user] = useAuthState(auth);
     const selectedFileReference = useRef<HTMLInputElement>(null);
-    const {selectedFile, setSelectedFile, onSelectFile} = useFile();
+    const {selectedFile, onSelectFile} = useFile();
     const [uploadingImage, setUploadingImage] = useState(false);
     const setCompanyStateValue = useSetRecoilState(companyState);
 
@@ -60,7 +60,7 @@ const About:React.FC<AboutProps> = ({companyData}) => {
                 <Stack>
                     <Flex width="100%" p={2} fontSize="10pt" fontWeight={700}>
                         <Flex direction="column"  flexGrow={1}>
-                            <Text>{companyData.numberOfMembers.toLocaleString()}</Text>
+                            <Text>{companyData.numberOfMembers?.toLocaleString()}</Text>
                             <Text>Members</Text>
                         </Flex>
                         <Flex direction="column" flexGrow={1}>

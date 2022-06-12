@@ -4,13 +4,13 @@ import React, { useEffect } from 'react';
 import { Company, companyState } from '../../atoms/companiesAtom';
 import { firestore } from '../../firebase/clientApp';
 import safeJsonStringify from 'safe-json-stringify';
-import CommunityNotFound from '../../components/Company/CompanyNotFound';
 import Header from '../../components/Company/Header';
 import PageContent from '../../components/Layout/PageContent';
 import CreatePost from '../../components/Company/CreatePost';
 import Posts from '../../components/Posts/Posts';
 import { useSetRecoilState } from 'recoil';
 import About from '../../components/Company/About';
+import CompanyNotFound from '../../components/Company/CompanyNotFound';
 
 type CompanyProps = {
     companyData: Company;
@@ -21,7 +21,7 @@ const CompanyPage:React.FC<CompanyProps> = ({companyData}) => {
     const setCompanyStateValue = useSetRecoilState(companyState);
 
     if (!companyData) {
-        return <CommunityNotFound/>
+        return <CompanyNotFound/>
     } 
 
     useEffect(()=>{
@@ -29,7 +29,7 @@ const CompanyPage:React.FC<CompanyProps> = ({companyData}) => {
             ...prev,
             currentCompany: companyData,
         }));
-    },[]);
+    },[companyData]);
 
     return (
         <>

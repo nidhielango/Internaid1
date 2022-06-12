@@ -8,11 +8,13 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../firebase/clientApp';
 import { useSetRecoilState } from 'recoil';
 import { authModalState } from '../../atoms/authModalAtom';
+import useDirectory from '../../hooks/useDirectory';
 
 const CreatePost:React.FC= () => {
     const router = useRouter();
     const [user] = useAuthState(auth);
     const setAuthModalState = useSetRecoilState(authModalState);
+    const {toggleMenuOpen}  = useDirectory();
 
     const onClick = () => {
         if (!user) {
@@ -20,7 +22,13 @@ const CreatePost:React.FC= () => {
             return;
         }
         const {companyId} = router.query;
-        router.push(`/${companyId}/submit`);
+
+        if (companyId){
+            router.push(`/${companyId}/submit`);
+            return;
+        }
+        toggleMenuOpen();
+
     }
 
     return (
